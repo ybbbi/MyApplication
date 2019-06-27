@@ -1,5 +1,6 @@
 package com.ybbbi.googlestore.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
 public class HomeInfo {
 
     public List<ListBean> list;
-    public List<String> picture;
+    public ArrayList<String> picture;
 
 /*    public List<String> getPicture() {
         return picture;
@@ -47,6 +48,9 @@ public class HomeInfo {
         public long size;
         public String downloadUrl;
         public String des;
+
+
+
 
        /* public int getId() {
             return id;
