@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.google.gson.Gson;
 import com.ybbbi.googlestore.NetURL.NetUrl;
@@ -31,6 +32,8 @@ public class DetailActivity extends AppCompatActivity {
 
     @BindView(R.id.ll_content)
     LinearLayout llContent;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
     private StateLayout stateLayout;
     private DetailMoudle detailMoudle;
     private ScreenMoudle screenMoudle;
@@ -84,6 +87,7 @@ public class DetailActivity extends AppCompatActivity {
         llContent.addView(tagMoudle.getView());
         llContent.addView(screenMoudle.getView());
         llContent.addView(desMoudle.getView());
+        desMoudle.setScrollView( scrollView);
         return view;
     }
 
