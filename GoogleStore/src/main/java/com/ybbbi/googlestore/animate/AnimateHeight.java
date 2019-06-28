@@ -18,15 +18,25 @@ public class AnimateHeight {
             public void onAnimationUpdate(ValueAnimator animation) {
                 int animatedValue = (int) animation.getAnimatedValue();
                 ViewGroup.LayoutParams params = target.getLayoutParams();
-
                 params.height=animatedValue;
                 target.setLayoutParams(params);
+                if(listener!=null){
+
+                    listener.value(animatedValue);
+                }
 
             }
         });
     }
     public void start(long duration){
         animator.setDuration(duration).start();
+    }
+    public interface onValueChange{
+        void value(int value);
+    }
+    private onValueChange listener;
+    public void setonValueChange(onValueChange listener){
+        this.listener=listener;
     }
 
 
