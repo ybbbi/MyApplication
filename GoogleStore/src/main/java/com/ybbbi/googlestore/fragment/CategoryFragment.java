@@ -22,6 +22,7 @@ import java.util.List;
  *ybbbi
  *2019-06-19 13:43
  */public class CategoryFragment extends BaseFragment {
+     //将title与info的bean加到一个集合中，方便适配
     private ArrayList<Object> alist=new ArrayList<Object>();
     private ListView listview;
 
