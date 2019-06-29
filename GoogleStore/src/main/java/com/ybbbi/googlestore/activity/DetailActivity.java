@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
@@ -16,6 +17,7 @@ import com.ybbbi.googlestore.bean.AppInfo;
 import com.ybbbi.googlestore.http.HttpHelper;
 import com.ybbbi.googlestore.moudle.DesMoudle;
 import com.ybbbi.googlestore.moudle.DetailMoudle;
+import com.ybbbi.googlestore.moudle.DownloadMoudle;
 import com.ybbbi.googlestore.moudle.ScreenMoudle;
 import com.ybbbi.googlestore.moudle.TagMoudle;
 import com.ybbbi.googlestore.view.StateLayout;
@@ -34,11 +36,14 @@ public class DetailActivity extends AppCompatActivity {
     LinearLayout llContent;
     @BindView(R.id.scrollView)
     ScrollView scrollView;
+    @BindView(R.id.detail_frame)
+    FrameLayout detailFrame;
     private StateLayout stateLayout;
     private DetailMoudle detailMoudle;
     private ScreenMoudle screenMoudle;
     private TagMoudle tagMoudle;
     private DesMoudle desMoudle;
+    private DownloadMoudle downloadMoudle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,10 +54,12 @@ public class DetailActivity extends AppCompatActivity {
 
         setacionbar();
         setContentView(stateLayout);
+
         detailMoudle = new DetailMoudle();
         tagMoudle = new TagMoudle();
-        screenMoudle=new ScreenMoudle();
+        screenMoudle = new ScreenMoudle();
         desMoudle = new DesMoudle();
+        downloadMoudle = new DownloadMoudle();
         screenMoudle.setActivity(this);
         stateLayout.bindSuccessView(getsuccessView());
         stateLayout.showloadingView();
@@ -87,7 +94,9 @@ public class DetailActivity extends AppCompatActivity {
         llContent.addView(tagMoudle.getView());
         llContent.addView(screenMoudle.getView());
         llContent.addView(desMoudle.getView());
-        desMoudle.setScrollView( scrollView);
+        detailFrame.addView(downloadMoudle.getView());
+
+        desMoudle.setScrollView(scrollView);
         return view;
     }
 
