@@ -143,9 +143,10 @@ public class CategoryAdapter extends MyBaseAdapter {
         }
     }
 
-    @Override
+
+   /* @Override
     protected void addAnimation(View convertView) {
         ViewCompat.animate(convertView).rotationXBy(360).setDuration(500).setInterpolator(new OvershootInterpolator()).start();
         super.addAnimation(convertView);
-    }
+    }*/
 }
