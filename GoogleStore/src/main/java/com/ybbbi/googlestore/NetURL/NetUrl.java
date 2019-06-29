@@ -24,4 +24,7 @@ public interface NetUrl {
     String URL_CATEGORY=URL_HOST+"category?index=0";
     String URL_HOT=URL_HOST+"hot?index=0";
     String DETAIL =URL_HOST+"detail?packageName=" ;
+    String URL_DOWNLOAD =URL_HOST+"download?name=%s" ;
+    String URL_DOWNLOAD_BREAK =URL_HOST+"download?name=%srange=%d" ;
+
 }
