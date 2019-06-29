@@ -13,7 +13,7 @@ public class AppInfo {
     public String version;
     public String downlaodUrl;
     public String iconUrl;
-    public String id;
+    public int id;
     public String name;
     public String packageName;
     public long size;
