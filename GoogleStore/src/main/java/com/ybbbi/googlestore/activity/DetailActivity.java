@@ -100,6 +100,13 @@ public class DetailActivity extends AppCompatActivity {
         return view;
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        downloadMoudle.removeObserver();
+    }
+
     /**
      * 加载数据
      */
@@ -116,6 +123,7 @@ public class DetailActivity extends AppCompatActivity {
                     tagMoudle.loadData(info);
                     screenMoudle.loadData(info);
                     desMoudle.loadData(info);
+                    downloadMoudle.loadData(info);
 
                 }
 
