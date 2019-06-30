@@ -11,7 +11,7 @@ public class AppInfo {
     public String date;
     public String downloadNum;
     public String version;
-    public String downlaodUrl;
+    public String downloadUrl;
     public String iconUrl;
     public int id;
     public String name;
