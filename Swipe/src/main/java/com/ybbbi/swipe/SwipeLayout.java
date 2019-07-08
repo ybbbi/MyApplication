@@ -7,6 +7,7 @@ import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 
 /**
@@ -17,6 +18,8 @@ public class SwipeLayout extends FrameLayout {
     private ViewDragHelper dragHelper;
     private View content;
     private View delete;
+    private int state = 0;//关闭
+    int touchSloap;
 
     public SwipeLayout(Context context) {
         this(context, null);
@@ -29,6 +32,7 @@ public class SwipeLayout extends FrameLayout {
     public SwipeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         dragHelper = ViewDragHelper.create(this, callback);
+        touchSloap = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     /**
@@ -47,17 +51,37 @@ public class SwipeLayout extends FrameLayout {
         delete.layout(content.getRight(), 0, content.getRight() + delete.getMeasuredWidth(), delete.getMeasuredHeight());
     }
 
+
+    float downX, downY;
+    long downTime;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
+                downX = getX();
+                downY = getY();
+                downTime = System.currentTimeMillis();
                 break;
             case MotionEvent.ACTION_MOVE:
-
+                float x = getX();
+                float y = getY();
+                //横向，拦截
+                if (Math.abs(x - downX) > Math.abs(y - downY)) {
+                    requestDisallowInterceptTouchEvent(true);
+                }
                 break;
             case MotionEvent.ACTION_UP:
+                long duration = System.currentTimeMillis() - downTime;
+                float X = getX() - downX;
+                float Y = getY() - downY;
+                float distance = (float) Math.sqrt(Math.pow(X, 2) + Math.pow(Y, 2));
+                if (duration < 400 && distance < touchSloap) {
+                    if (mlistener != null) {
+                        mlistener.onClick();
 
+                    }
+                }
                 break;
 
         }
@@ -81,13 +105,20 @@ public class SwipeLayout extends FrameLayout {
         public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
 
-            if(content.getLeft()<-delete.getMeasuredWidth()/2){
-                //
-                dragHelper.smoothSlideViewTo(content,-delete.getMeasuredWidth(),0);
-                ViewCompat.postInvalidateOnAnimation(SwipeLayout.this);
-            }else{
-                dragHelper.smoothSlideViewTo(content,0,0);
-                ViewCompat.postInvalidateOnAnimation(SwipeLayout.this);
+            if (content.getLeft() < -delete.getMeasuredWidth() / 2) {
+                //打开
+                open();
+                if (listener != null) {
+
+                    listener.open(SwipeLayout.this);
+                }
+            } else {
+                //关闭
+                close();
+                if (listener != null) {
+
+                    listener.close(SwipeLayout.this);
+                }
 
             }
 
@@ -104,15 +135,15 @@ public class SwipeLayout extends FrameLayout {
 
                 if (left > 0) {
                     left = 0;
-                } else if (left <- delete.getMeasuredWidth()) {
+                } else if (left < -delete.getMeasuredWidth()) {
                     left = -delete.getMeasuredWidth();
                 }
             }
-            if(child==delete){
-                if (left <content.getMeasuredWidth()- delete.getMeasuredWidth()) {
-                    left = content.getMeasuredWidth()-delete.getMeasuredWidth();
-                }else if(left>content.getMeasuredWidth()){
-                    left=content.getMeasuredWidth();
+            if (child == delete) {
+                if (left < content.getMeasuredWidth() - delete.getMeasuredWidth()) {
+                    left = content.getMeasuredWidth() - delete.getMeasuredWidth();
+                } else if (left > content.getMeasuredWidth()) {
+                    left = content.getMeasuredWidth();
                 }
             }
             return left;
@@ -130,16 +161,51 @@ public class SwipeLayout extends FrameLayout {
             invalidate();
 
 
-
         }
 
     };
 
+    public void close() {
+        dragHelper.smoothSlideViewTo(content, 0, 0);
+        ViewCompat.postInvalidateOnAnimation(SwipeLayout.this);
+    }
+
+    public void open() {
+        dragHelper.smoothSlideViewTo(content, -delete.getMeasuredWidth(), 0);
+
+        ViewCompat.postInvalidateOnAnimation(SwipeLayout.this);
+    }
+
     @Override
     public void computeScroll() {
         super.computeScroll();
-        if(dragHelper.continueSettling(true)){
+        if (dragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(SwipeLayout.this);
         }
     }
+
+    private OnSwipeListener listener;
+
+    public void setOnSwipeListener(OnSwipeListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnSwipeListener {
+        void open(SwipeLayout layout);
+
+        void close(SwipeLayout layout);
+
+    }
+
+    private onSwipeClickListener mlistener;
+
+    public void setonSwipeClickListener(onSwipeClickListener mlistener) {
+        this.mlistener = mlistener;
+    }
+
+    public interface onSwipeClickListener {
+        void onClick();
+    }
+
+
 }
